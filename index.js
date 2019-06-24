@@ -13,7 +13,7 @@ const server = http.createServer((req, res) => {
           req.client.remoteAddress;
 };
 
- res.end(getClientIp(req) + '\n');
+  res.end('Hello ' + getClientIp(req) +'\n');
 });
 
 server.listen(port, hostname, () => {
