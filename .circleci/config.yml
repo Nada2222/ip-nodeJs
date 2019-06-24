@@ -1,0 +1,28 @@
+on: 2
+jobs:
+  build:
+    docker:
+    - image: mareimorsy/light-base
+    steps:
+    - checkout
+
+    - add_ssh_keys:
+        fingerprints:
+          - "9a:48:df:c1:d3:36:88:3d:33:90:f4:a8:92:3d:9c:a8"
+
+    - setup_remote_docker:
+        docker_layer_caching: true
+
+    - run:
+        name: "Log in to AWS ECR"
+        command: eval $(aws ecr get-login --no-include-email)
+
+    - run:
+        name: Build & Push docker images
+        command: curl -s https://s3.amazonaws.com/elmenus-scripts/docker-images/build.sh | bash
+
+    - run:
+        name: "Notify users on slack"
+        command: curl -s https://s3.amazonaws.com/elmenus-scripts/deploy-cast/mention.sh | bash
+
+
